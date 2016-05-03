@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript">
+    function sendUpdate(val) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("GET", "pwm?setPwm=" + val, true);
+      xhttp.send();
+    }
+    function getValue () {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange=function() {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+          document.getElementById("power").value = xhttp.responseText;
+        }
+      };
+      xhttp.open("GET", "pwm?getPwm=0", true);
+      xhttp.send();
+    }
+  </script>
+  <head>
+    <meta charset="UTF-8">
+    <title>WIFI LEDs</title>
+  </head>
+  <body onload="getValue()" style="background-color:#0080FF">
+    <div style="margin: 0 auto; width: 600px;">
+    <H1 style="text-align:center;">WIFI LEDs</H1>
+    <form >
+        <input type="range" id="power" min="0" max="100" onchange="sendUpdate(this.value);" style="width: 100%; height: 40px;">
+    </form>
+    </div>
+  </body>
+</html>
