@@ -57,7 +57,7 @@ function start_server(  )
 end
 
 setup_pwm()
-mdns.register("light", { description="WIFI led controller", service="http"})
+mdns.register("light", { description="WIFI led controller", service="http"}) --register mdns name
 print("starting server")
 start()
 
