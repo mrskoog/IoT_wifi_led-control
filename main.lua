@@ -1,15 +1,58 @@
 pwm_pin = 4 --gpio02
+time = {0, 0, 0}
+timezon = 2
+DST = 0
 
-function setup_pwm()
-	pwm.setup(pwm_pin, 1000, 100)
-	pwm.start(pwm_pin)
-	files = file.list()
-	if files["pwm.conf"] then
-		file.open("pwm.conf", "r")
-		local val = file.readline()
-		pwm.setduty(pwm_pin,tonumber(val) * 10)
-		file.close()
+function setup()
+	--PWM setup in init.lua
+	mdns.register("light", { description="WIFI led controller", service="http"}) --register mdns name
+	get_time()
+	tmr.alarm(0, 1000, tmr.ALARM_AUTO, rtc)
+end
+
+function rtc()
+	time[3] = time[3] + 1
+	if time[3] == 12 then 
+		time[3] = 0
+		time[2] = time[2] + 1
+		if time[2] == 12 then
+			time[2] = 0
+			time[1] = time[1] + 1
+			if time[1] == 24 then
+				time[1] = 0
+				get_time() --sync time with net
+			end
+		end
 	end
+end
+
+function split_time_str( s )
+	local i = 1
+	for value in string.gmatch(s, "%d%d") do
+		time[i] = tonumber(value)
+		i = i + 1
+	end
+	time[i] = time[1] + timezon + DST --add daylight saving time and timezon offset
+end
+
+function get_time(  )
+	conn=net.createConnection(net.TCP, 0) 
+	conn:on("connection",function(conn, payload)
+			conn:send("HEAD / HTTP/1.1\r\n".. 
+					"Host: google.com\r\n"..
+					"Accept: */*\r\n"..
+					"User-Agent: Mozilla/4.0 (compatible; esp8266 Lua;)"..
+					"\r\n\r\n") 
+	end)
+	conn:on("receive", function(conn, payload)
+		timestr = (string.sub(payload,string.find(payload,"Date: ")+23,string.find(payload,"Date: ")+31))
+		conn:close()
+		tmr.stop(0)
+		split_time_str(timestr)
+		tmr.alarm(0, 5000, 1, rtc)
+		wifi.sta.disconnect()
+	end) 
+	conn:connect(80,'google.com')
 end
 
 function start_server(  )
@@ -56,8 +99,7 @@ function start_server(  )
 	print("server started")
 end
 
-setup_pwm()
-mdns.register("light", { description="WIFI led controller", service="http"}) --register mdns name
+setup()
 print("starting server")
 start()
 

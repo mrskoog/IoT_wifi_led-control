@@ -3,5 +3,14 @@ TODO:
 * nicer looking UI
 * On off button UI
 * Disco mode?
-* sunset/sunrise mode
-* inverted sunset mode
+* timer/event (sunset/rise) light mode
+* set time
+
+
+
+modules used:
+PWM
+net
+gpio
+mdns
+http
