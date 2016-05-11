@@ -3,7 +3,7 @@
 <script type="text/javascript">
     function sendUpdate(val) {
       var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "pwm?setPwm=" + val, true);
+      xhttp.open("GET", "cgi?setPwm=" + val, true);
       xhttp.send();
     }
     function getValue () {
@@ -13,7 +13,7 @@
           document.getElementById("power").value = xhttp.responseText;
         }
       };
-      xhttp.open("GET", "pwm?getPwm=0", true);
+      xhttp.open("GET", "cgi?getPwm=0", true);
       xhttp.send();
     }
   </script>

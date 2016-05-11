@@ -2,9 +2,9 @@ TODO:
 * add enduser setup and save data to file
 * nicer looking UI
 * On off button UI
-* Disco mode?
+* timer settings in UI
 * timer/event (sunset/rise) light mode
-* set time
+* set time (ntp)
 
 
 
@@ -14,3 +14,5 @@ net
 gpio
 mdns
 http
+sntp
+rtc

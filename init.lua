@@ -12,14 +12,14 @@ end
 function connect_wifi( ssid, password )
 	wifi.setmode(wifi.STATION)
 	wifi.sta.config(ssid, password)
-	tmr.alarm(0, 1000, 1, function()
+	tmr.alarm(0, 1000, tmr.ALARM_AUTO, function()
 		if wifi.sta.getip() == nil then
 			print("trying to connecting...")
 		else
 			print('IP: ',wifi.sta.getip())
 			tmr.stop(0)
 			print("*** You've got 5 sec to stop timer 0 ***")
-			tmr.alarm(0, 5000, 0, function() dofile("main.lua") end)
+			tmr.alarm(0, 5000, tmr.ALARM_SINGLE, function() dofile("main.lua") end)
 		end
 	end)
 end
