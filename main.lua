@@ -81,6 +81,8 @@ function start_server(  )
 					else
 						send_bad_request(cn)
 					end
+				elseif name == "get_current_time" then
+					cn.send(rtctime.get())
 				else
 					send_bad_request(cn)
 					break
