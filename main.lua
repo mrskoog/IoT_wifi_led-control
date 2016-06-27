@@ -4,7 +4,7 @@ local timer = nil
 
 function setup()
 	--PWM setup in init.lua
-	mdns.register("light", { description="WIFI led controller", service="http"}) --register mdns name
+	--mdns.register("light", { description="WIFI led controller", service="http"}) --register mdns name
 	sntp.sync(nil,
 		function(sec,usec,server)
 			print('sync', sec, usec, server)
